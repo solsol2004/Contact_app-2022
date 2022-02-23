@@ -16,9 +16,17 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  var name=['예쏠', '뭉치', '빠빠'];
+  var name=['예쏠', '뭉치', '빠빠',];
   var like=[0,2,3];
-  var valueText= 'hi';
+  var people= 3;
+
+  onChange(){setState(() {
+    people++;
+  });}
+
+  addName(a){setState(() {
+    name.add(a);
+  });}
 
   @override
   Widget build(BuildContext context)=> Scaffold(
@@ -26,14 +34,14 @@ class _MyAppState extends State<MyApp> {
           child:Text('+'), 
           onPressed: (){
             showDialog(context: context, builder: (context){
-              return DesignUI();
+              return DesignUI(onChange:onChange, addName:addName);
               },
             );
           },
         ),
         appBar: AppBar(title: Text('contact')),
         body: ListView.builder(
-          itemCount:3,
+          itemCount:name.length,
           itemBuilder: (c,i){
             return  ListTile(
               leading: Icon(Icons.person_pin), 
@@ -45,8 +53,12 @@ class _MyAppState extends State<MyApp> {
     );
 }
 
+
 class DesignUI extends StatelessWidget {
-  const DesignUI({ Key? key }) : super(key: key);
+  DesignUI({ Key? key, this.onChange, this.addName }) : super(key: key);
+  var onChange;
+  var inputData=TextEditingController();
+  var addName;
 
   @override
   Widget build(BuildContext context) {
@@ -56,9 +68,13 @@ class DesignUI extends StatelessWidget {
         height: 200,
         child: Column(
           children: [
-            TextField(),
+            TextField(controller: inputData),
             TextButton(
-              onPressed: (){},
+              onPressed: (){
+                onChange();
+                Navigator.pop(context);
+                addName(inputData.text);
+              },
               child: Text('완료')),
             TextButton(
               onPressed: (){Navigator.pop(context);},
